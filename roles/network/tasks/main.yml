@@ -1,0 +1,10 @@
+---
+# tasks file for roles/network
+
+- command: kubectl apply -f https://docs.projectcalico.org/v3.3/getting-started/kubernetes/installation/hosted/rbac-kdd.yaml
+  become: false
+  changed_when: false
+
+- command: kubectl apply -f https://docs.projectcalico.org/v3.3/getting-started/kubernetes/installation/hosted/kubernetes-datastore/calico-networking/1.7/calico.yaml
+  become: false
+  changed_when: false

@@ -1,0 +1,4 @@
+---
+
+- import_tasks: dashboard.yml
+- import_tasks: metrics-server.yml

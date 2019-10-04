@@ -1,0 +1,21 @@
+---
+
+- command: kubectl apply -f https://raw.githubusercontent.com/containous/traefik/v1.7/examples/k8s/traefik-rbac.yaml
+  become: false
+  changed_when: false
+
+- command: kubectl apply -f https://raw.githubusercontent.com/containous/traefik/v1.7/examples/k8s/traefik-deployment.yaml
+  become: false
+  changed_when: false
+
+- shell: 'kubectl scale --replicas=4 deployment/traefik-ingress-controller --namespace kube-system'
+  become: false
+  changed_when: false
+
+- template:
+    src: ingress-svc-patch.yaml.j2
+    dest: /tmp/ingress-svc-patch.yaml
+
+- shell: 'kubectl patch svc traefik-ingress-service -n kube-system --patch "$(cat /tmp/ingress-svc-patch.yaml)"'
+  become: false
+  changed_when: false

@@ -1,0 +1,22 @@
+---
+# tasks file for roles/addons
+
+- command: kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v1.10.1/src/deploy/recommended/kubernetes-dashboard.yaml
+  become: false
+  changed_when: false
+
+- template:
+    src: dashboard/admin-user.yaml.j2
+    dest: /tmp/dashboard-adminuser.yaml
+
+- command: kubectl apply -f /tmp/dashboard-adminuser.yaml
+  become: false
+  changed_when: false
+
+- name: Get the token to login to dashboard with the following command
+  debug:
+    msg: "kubectl -n kube-system describe secret $(kubectl -n kube-system get secret | grep admin-user | awk '{print $1}')"
+
+- name: Run kubectl proxy and access the following link to view dashboard
+  debug:
+    msg: 'http://localhost:8001/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/'

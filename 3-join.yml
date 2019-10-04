@@ -1,0 +1,19 @@
+---
+
+- hosts: master
+  tasks:
+    - shell: "kubeadm token list | awk '{print $1}' | sed -n 2p"
+      register: KUBEADM_INIT_TOKEN
+      changed_when: false
+
+    - shell: "openssl x509 -pubkey -in /etc/kubernetes/pki/ca.crt | openssl rsa -pubin -outform der 2>/dev/null | openssl dgst -sha256 -hex | sed 's/^.* //'"
+      register: KUBEADM_INIT_HASH
+      changed_when: false
+
+    - set_fact:
+        kubeadm_init_token: '{{ KUBEADM_INIT_TOKEN.stdout }}'
+        kubeadm_init_hash: '{{ KUBEADM_INIT_HASH.stdout }}'
+
+- hosts: nodes
+  roles:
+    - role: node

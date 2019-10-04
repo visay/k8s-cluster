@@ -1,0 +1,6 @@
+---
+# tasks file for roles/node
+
+- command: 'kubeadm join --token {{ hostvars["k8s-master"]["kubeadm_init_token"] }} {{ ip_master }}:6443 --discovery-token-ca-cert-hash sha256:{{ hostvars["k8s-master"]["kubeadm_init_hash"] }}'
+  args:
+    creates: /etc/kubernetes/pki/ca.crt

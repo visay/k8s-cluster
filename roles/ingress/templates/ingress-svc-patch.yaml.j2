@@ -1,0 +1,9 @@
+#
+# {{ ansible_managed }}
+#
+
+spec:
+  externalIPs:
+{% for ip in ip_nodes %}
+    - {{ ip }}
+{% endfor %}

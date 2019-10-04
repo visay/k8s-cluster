@@ -1,0 +1,37 @@
+---
+
+- command: kubectl apply -f https://raw.githubusercontent.com/kubernetes-incubator/metrics-server/master/deploy/1.8%2B/aggregated-metrics-reader.yaml
+  become: false
+  changed_when: false
+
+- command: kubectl apply -f https://raw.githubusercontent.com/kubernetes-incubator/metrics-server/master/deploy/1.8%2B/auth-delegator.yaml
+  become: false
+  changed_when: false
+
+- command: kubectl apply -f https://raw.githubusercontent.com/kubernetes-incubator/metrics-server/master/deploy/1.8%2B/auth-reader.yaml
+  become: false
+  changed_when: false
+
+- command: kubectl apply -f https://raw.githubusercontent.com/kubernetes-incubator/metrics-server/master/deploy/1.8%2B/metrics-apiservice.yaml
+  become: false
+  changed_when: false
+
+- command: kubectl apply -f https://raw.githubusercontent.com/kubernetes-incubator/metrics-server/master/deploy/1.8%2B/metrics-server-service.yaml
+  become: false
+  changed_when: false
+
+- command: kubectl apply -f https://raw.githubusercontent.com/kubernetes-incubator/metrics-server/master/deploy/1.8%2B/resource-reader.yaml
+  become: false
+  changed_when: false
+
+- template:
+    src: metrics-server/server-deployment.yaml.j2
+    dest: /tmp/metrics-server-deployment.yaml
+
+- command: kubectl apply -f /tmp/metrics-server-deployment.yaml
+  become: false
+  changed_when: false
+
+- name: Test viewing cpu and memory usage command
+  debug:
+    msg: "kubectl top node && kubectl top pod"

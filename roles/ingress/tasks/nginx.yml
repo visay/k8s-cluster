@@ -1,0 +1,21 @@
+---
+
+- command: kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/nginx-0.24.1/deploy/mandatory.yaml
+  become: false
+  changed_when: false
+
+- shell: 'kubectl scale --replicas=4 deployment/nginx-ingress-controller --namespace ingress-nginx'
+  become: false
+  changed_when: false
+
+- command: kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/nginx-0.24.1/deploy/provider/baremetal/service-nodeport.yaml
+  become: false
+  changed_when: false
+
+- template:
+    src: ingress-svc-patch.yaml.j2
+    dest: /tmp/ingress-svc-patch.yaml
+
+- shell: 'kubectl patch svc ingress-nginx -n ingress-nginx --patch "$(cat /tmp/ingress-svc-patch.yaml)"'
+  become: false
+  changed_when: false

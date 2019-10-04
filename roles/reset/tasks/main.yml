@@ -1,0 +1,4 @@
+---
+# tasks file for roles/reset
+
+- command: kubeadm reset --force

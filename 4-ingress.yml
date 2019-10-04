@@ -1,0 +1,7 @@
+---
+
+- hosts: master
+  vars:
+    ingress_type: 'traefik' # other option is 'nginx'
+  roles:
+    - role: ingress

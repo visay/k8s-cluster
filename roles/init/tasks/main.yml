@@ -1,0 +1,24 @@
+---
+# tasks file for roles/init
+
+- command: kubeadm config images pull
+  changed_when: false
+
+- command: kubeadm init --pod-network-cidr=192.168.0.0/16
+  args:
+    creates: /etc/kubernetes/pki/ca.crt
+
+- file:
+    path: '/home/{{ ansible_user }}/.kube'
+    state: directory
+    owner: '{{ ansible_user }}'
+    group: '{{ ansible_user }}'
+    mode: 0755
+
+- copy:
+    src: /etc/kubernetes/admin.conf
+    dest: '/home/{{ ansible_user }}/.kube/config'
+    remote_src: yes
+    owner: '{{ ansible_user }}'
+    group: '{{ ansible_user }}'
+    mode: 0600

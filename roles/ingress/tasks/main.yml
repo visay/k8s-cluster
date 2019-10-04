@@ -1,0 +1,7 @@
+---
+
+- import_tasks: nginx.yml
+  when: ingress_type == 'nginx'
+
+- import_tasks: traefik.yml
+  when: ingress_type == 'traefik'
